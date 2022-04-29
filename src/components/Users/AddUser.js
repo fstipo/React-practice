@@ -1,32 +1,37 @@
 import React, { useState } from 'react';
-import styles from './AddUser.module.css';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
+import styles from './AddUser.module.css';
 
 const AddUser = (props) => {
   const [username, setUsername] = useState('');
   const [userAge, setUserAge] = useState('');
 
+  const enteredUserNameHandler = (e) => {
+    setUsername(() => e.target.value);
+  };
+  const enteredUserAgeHandler = (e) => {
+    setUserAge(() => e.target.value);
+  };
+
   const addUserHandler = (e) => {
     e.preventDefault();
-    username.trim().length &&
-      userAge.trim().length > 0 &&
-      +userAge > 0 &&
-      props.onAddUser(username, userAge);
+    if (username.trim().length === 0 || userAge.trim().length === 0) {
+      console.log('what!!!!1');
+      return;
+    }
+    if (+userAge < 0) {
+      return;
+    }
+    props.onAddUser(username, userAge);
     setUsername('');
     setUserAge('');
   };
 
-  const getUsernameHandler = (e) => {
-    setUsername(e.target.value.trim());
-  };
-
-  const addUserAgeHandler = (e) => {
-    setUserAge(e.target.value.trim());
-  };
-
   return (
     <>
+      {/* <ErrorModal title="You have a error" msg="Što to radiš Konju?" /> */}
+
       <Card className={styles.input}>
         <form onSubmit={addUserHandler}>
           <label htmlFor="username">Username</label>
@@ -34,14 +39,15 @@ const AddUser = (props) => {
             id="username"
             type="text"
             value={username}
-            onChange={getUsernameHandler}
+            onChange={enteredUserNameHandler}
           />
           <label htmlFor="age">Age</label>
           <input
             id="age"
             type="number"
+            step="1"
             value={userAge}
-            onChange={addUserAgeHandler}
+            onChange={enteredUserAgeHandler}
           />
           <Button type="submit">Add User</Button>
         </form>
