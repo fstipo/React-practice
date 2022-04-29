@@ -30,6 +30,7 @@ const AddUser = (props) => {
         title: 'Invalid Age',
         message: 'Please enter a valid (age > 0)',
       });
+      return;
     }
 
     props.onAddUser(username, userAge);
