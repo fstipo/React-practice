@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import styles from './AddUser.module.css';
+import ErrorModal from '../UI/ErrorModal';
 
 const AddUser = (props) => {
   const [username, setUsername] = useState('');
   const [userAge, setUserAge] = useState('');
+  const [error, setError] = useState();
 
   const enteredUserNameHandler = (e) => {
     setUsername(() => e.target.value);
@@ -17,20 +19,37 @@ const AddUser = (props) => {
   const addUserHandler = (e) => {
     e.preventDefault();
     if (username.trim().length === 0 || userAge.trim().length === 0) {
-      console.log('what!!!!1');
+      setError({
+        title: 'Invalid Input',
+        message: 'Please enter a valid name and age (non empty) values',
+      });
       return;
     }
     if (+userAge < 0) {
-      return;
+      setError({
+        title: 'Invalid Age',
+        message: 'Please enter a valid (age > 0)',
+      });
     }
+
     props.onAddUser(username, userAge);
     setUsername('');
     setUserAge('');
   };
 
+  const errorHandler = () => {
+    setError(null);
+  };
+
   return (
     <>
-      {/* <ErrorModal title="You have a error" msg="Što to radiš Konju?" /> */}
+      {error && (
+        <ErrorModal
+          title={error.title}
+          msg={error.message}
+          onClose={errorHandler}
+        />
+      )}
 
       <Card className={styles.input}>
         <form onSubmit={addUserHandler}>
